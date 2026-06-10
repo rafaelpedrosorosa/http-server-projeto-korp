@@ -1,0 +1,22 @@
+services:
+  http-server-projeto-korp:
+    image: localhost/http-server-projeto-korp:latest
+    container_name: http-server-projeto-korp
+    networks:
+      - korp-net
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx-proxy-korp
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+    depends_on:
+      - http-server-projeto-korp
+    networks:
+      - korp-net
+
+networks:
+  korp-net:
+    driver: bridge
