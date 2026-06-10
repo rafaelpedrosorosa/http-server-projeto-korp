@@ -1,7 +1,12 @@
 services:
   http-server-projeto-korp:
-    image: localhost/http-server-projeto-korp:latest
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    image: http-server-projeto-korp:latest
     container_name: http-server-projeto-korp
+    expose:
+      - "8080"
     networks:
       - korp-net
 
@@ -9,9 +14,9 @@ services:
     image: nginx:latest
     container_name: nginx-proxy-korp
     ports:
-      - "80:80"
+      - "8081:80"
     volumes:
-      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro,z
     depends_on:
       - http-server-projeto-korp
     networks:
