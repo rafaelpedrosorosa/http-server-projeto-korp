@@ -22,6 +22,28 @@ services:
     networks:
       - korp-net
 
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus-korp
+    ports:
+      - "9091:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro,z
+    depends_on:
+      - http-server-projeto-korp
+    networks:
+      - korp-net
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana-korp
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+    networks:
+      - korp-net
+
 networks:
   korp-net:
     driver: bridge
