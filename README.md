@@ -1,41 +1,98 @@
-Projeto Korp
+# http-server-projeto-korp
 
-Descrição
-- Serviço HTTP em Go
+## Descrição
 
-Endpoints
-- /projeto-korp
-- /health
-- /metrics
+Serviço HTTP desenvolvido em Golang para o desafio técnico da Korp.
 
-Tecnologias
-- Golang
-- Prometheus
-- Grafana
-- Nginx
-- Podman/Docker
+A aplicação disponibiliza endpoints para consulta da aplicação, health check e métricas Prometheus, executando em containers com Nginx como reverse proxy e monitoramento através de Prometheus e Grafana.
 
-Arquitetura
+## Tecnologias Utilizadas
 
-Cliente
-   |
- Nginx
-   |
- Aplicação Go
-   |
- Prometheus
-   |
- Grafana
+* Golang
+* Nginx
+* Prometheus
+* Grafana
+* Podman / Docker
+* Docker Compose
 
-Como executar
+## Endpoints
 
-podman build ...
-podman run ...
+| Endpoint      | Descrição                                        |
+| ------------- | ------------------------------------------------ |
+| /projeto-korp | Retorna informações da aplicação em formato JSON |
+| /health       | Endpoint de verificação de saúde da aplicação    |
+| /metrics      | Métricas Prometheus                              |
 
-Monitoramento
+## Arquitetura
+
+Cliente → Nginx → Aplicação Go
+
+Prometheus → Coleta métricas da aplicação
+
+Grafana → Visualização das métricas
+
+## Como Executar
+
+### Clonar o projeto
+
+```bash
+git clone https://github.com/rafaelpedrosorosa/http-server-projeto-korp.git
+cd http-server-projeto-korp
+```
+
+### Subir os containers
+
+```bash
+docker compose up -d
+```
+
+ou
+
+```bash
+podman-compose up -d
+```
+
+## Testes
+
+### Endpoint principal
+
+```bash
+curl http://localhost:8081/projeto-korp
+```
+
+### Health Check
+
+```bash
+curl http://localhost:8081/health
+```
+
+### Métricas
+
+```bash
+curl http://localhost:8081/metrics
+```
+
+## Monitoramento
 
 Prometheus:
+
 http://localhost:9091
 
 Grafana:
+
 http://localhost:3000
+
+## Dashboard
+
+O dashboard Grafana apresenta:
+
+* Status da aplicação
+* Uso de memória
+* Uso de CPU
+* Heap da aplicação
+* Quantidade de goroutines
+* Total de requisições
+* Requisições por segundo
+* Distribuição de requisições por endpoint
+
+O dashboard exportado encontra-se no repositório através do arquivo JSON disponibilizado para importação.
