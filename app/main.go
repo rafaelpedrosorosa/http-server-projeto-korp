@@ -17,9 +17,9 @@ type Response struct {
 var totalRequests = prometheus.NewCounterVec(
 	prometheus.CounterOpts{
 		Name: "http_server_projeto_korp_requests_total",
-		Help: "Total de requisicoes recebidas pelo servico.",
+		Help: "Total de requisicoes recebidas.",
 	},
-	[]string{"endpoint", "method", "status"},
+	[]string{"endpoint"},
 )
 
 func init() {
@@ -27,11 +27,8 @@ func init() {
 }
 
 func projetoKorp(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodGet {
-		totalRequests.WithLabelValues("/projeto-korp", r.Method, "405").Inc()
-		http.Error(w, "Metodo nao permitido", http.StatusMethodNotAllowed)
-		return
-	}
+
+	totalRequests.WithLabelValues("/projeto-korp").Inc()
 
 	response := Response{
 		Nome:    "Projeto Korp",
@@ -39,36 +36,25 @@ func projetoKorp(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-
-	totalRequests.WithLabelValues("/projeto-korp", r.Method, "200").Inc()
-	err := json.NewEncoder(w).Encode(response)
-	if err != nil {
-		http.Error(w, "Erro ao gerar resposta", http.StatusInternalServerError)
-		return
-	}
+	json.NewEncoder(w).Encode(response)
 }
 
 func health(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodGet {
-		totalRequests.WithLabelValues("/health", r.Method, "405").Inc()
-		http.Error(w, "Metodo nao permitido", http.StatusMethodNotAllowed)
-		return
-	}
+
+	totalRequests.WithLabelValues("/health").Inc()
 
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-
-	totalRequests.WithLabelValues("/health", r.Method, "200").Inc()
 	w.Write([]byte(`{"status":"ok"}`))
 }
 
 func main() {
+
 	http.HandleFunc("/projeto-korp", projetoKorp)
 	http.HandleFunc("/health", health)
+
 	http.Handle("/metrics", promhttp.Handler())
 
-	println("http-server-projeto-korp iniciado na porta 8080")
+	println("Servidor iniciado na porta 8080")
 
 	err := http.ListenAndServe(":8080", nil)
 	if err != nil {
