@@ -8,6 +8,20 @@ A aplicação disponibiliza endpoints para consulta da aplicação, health check
 
 ---
 
+## Requisitos Atendidos
+
+* Servidor HTTP em Golang
+* Endpoint GET `/projeto-korp`
+* Endpoint GET `/health`
+* Endpoint GET `/metrics`
+* Execução em containers
+* Reverse Proxy com Nginx
+* Monitoramento com Prometheus
+* Dashboard Grafana
+* Automação completa com Ansible
+
+---
+
 ## Tecnologias Utilizadas
 
 * Golang
@@ -32,6 +46,15 @@ A aplicação disponibiliza endpoints para consulta da aplicação, health check
 
 ---
 
+## Requisitos
+
+* Go 1.23+
+* Docker ou Podman
+* Docker Compose ou Podman Compose
+* Ansible
+
+---
+
 ## Estrutura do Projeto
 
 ```text
@@ -43,18 +66,10 @@ A aplicação disponibiliza endpoints para consulta da aplicação, health check
 │   └── main.go
 ├── nginx
 │   └── conf.d
-│       └── http-server-projeto-korp.conf
 ├── prometheus
 │   └── prometheus.yml
 ├── grafana
-│   ├── provisioning
-│   │   ├── datasources
-│   │   └── dashboards
-│   └── dashboards
 ├── ansible
-│   ├── inventory
-│   ├── site.yml
-│   └── roles
 ├── docs
 │   └── evidencias
 ├── docker-compose.yml
@@ -118,28 +133,27 @@ Aplicação Go (8080)
 
 ---
 
-## Como Executar
+## Deploy Rápido
 
-### Clonar o repositório
-
-```bash
-git clone https://github.com/rafaelpedrosorosa/http-server-projeto-korp.git
-cd http-server-projeto-korp
-```
-
-### Subir os containers
-
-Docker:
+### Docker
 
 ```bash
 docker compose up -d
 ```
 
-Podman:
+### Podman
 
 ```bash
 podman-compose up -d
 ```
+
+Serviços disponíveis:
+
+* http://localhost:8081/projeto-korp
+* http://localhost:8081/health
+* http://localhost:8081/metrics
+* http://localhost:9091
+* http://localhost:3000
 
 ---
 
@@ -171,6 +185,24 @@ curl -s 'http://localhost:9091/api/v1/query?query=up'
 
 ---
 
+## Métricas Customizadas
+
+A aplicação exporta a métrica:
+
+```text
+http_server_projeto_korp_requests_total
+```
+
+Labels utilizadas:
+
+* endpoint
+* method
+* status
+
+Esta métrica é utilizada para monitoramento e construção dos painéis do Grafana.
+
+---
+
 ## Monitoramento
 
 ### Prometheus
@@ -196,26 +228,18 @@ Senha: admin
 
 ## Dashboard Grafana
 
-O dashboard disponibiliza informações sobre:
+O dashboard disponibiliza:
 
 * Status da aplicação
 * Uso de memória
 * Uso de CPU
 * Heap da aplicação
-* Quantidade de goroutines
+* Goroutines
 * Total de requisições
 * Requisições por segundo
 * Distribuição de requisições por endpoint
 
-O Grafana é provisionado automaticamente através dos arquivos:
-
-```text
-grafana/provisioning/datasources/datasources.yml
-grafana/provisioning/dashboards/dashboards.yml
-grafana/dashboards/http-server-projeto-korp-dashboard.json
-```
-
-Não é necessária importação manual após a execução do ambiente.
+O Grafana é provisionado automaticamente através dos arquivos de provisionamento do projeto.
 
 ---
 
@@ -248,37 +272,25 @@ ansible-playbook -i inventory site.yml --ask-become-pass
 
 ![Endpoint Projeto Korp](docs/evidencias/app_endpoint_projeto_korp.png)
 
----
-
 ### Endpoint /health
 
 ![Health Check](docs/evidencias/app_healthcheck.png)
 
----
-
-### Métricas Prometheus
+### Consulta Prometheus
 
 ![Prometheus Query](docs/evidencias/prometheus_query_up.png)
-
----
 
 ### Targets Prometheus
 
 ![Prometheus Targets](docs/evidencias/prometheus_targets_up.png)
 
----
-
 ### Dashboard Grafana
 
 ![Grafana Dashboard](docs/evidencias/grafana_dashboard.png)
 
----
+### Execução do Playbook Ansible
 
-### Deploy Automatizado com Ansible
-
-![Ansible Deploy](docs/evidencias/ansible_deploy_sucesso.png)
-
----
+![Ansible Playbook](docs/evidencias/ansible_playbook_execucao.png)
 
 ### Validação da Aplicação via Ansible
 
@@ -288,7 +300,7 @@ ansible-playbook -i inventory site.yml --ask-become-pass
 
 ## Validação do Ambiente
 
-Após a execução do playbook Ansible ou do Docker Compose, os seguintes componentes devem estar disponíveis:
+Após a execução do Docker Compose ou do Playbook Ansible:
 
 | Serviço      | URL                                |
 | ------------ | ---------------------------------- |
@@ -303,5 +315,7 @@ Após a execução do playbook Ansible ou do Docker Compose, os seguintes compon
 
 Rafael Rosa
 
-Desafio Técnico Korp - Infraestrutura, Containers, Monitoramento e Automação com Ansible.
+Analista de Infraestrutura | Linux | Containers | Automação | Observabilidade
+
+Projeto desenvolvido para o processo seletivo da Korp.
 
