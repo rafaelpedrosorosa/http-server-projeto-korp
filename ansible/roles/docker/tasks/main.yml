@@ -1,0 +1,50 @@
+---
+- name: Instalar Docker no Ubuntu
+  when: ansible_os_family == "Debian"
+  apt:
+    name:
+      - docker.io
+      - docker-compose-plugin
+    state: present
+    update_cache: yes
+
+- name: Instalar Podman no Rocky
+  become: true
+  when: ansible_os_family == "RedHat"
+  dnf:
+    name:
+      - podman
+      - podman-compose
+    state: present
+
+- name: Habilitar Podman socket no Rocky
+  become: true
+  when: ansible_os_family == "RedHat"
+  systemd:
+    name: podman.socket
+    state: started
+    enabled: true
+
+- name: Instalar Docker no Ubuntu
+  become: true
+  when: ansible_os_family == "Debian"
+  apt:
+    name:
+      - docker.io
+      - docker-compose-plugin
+    state: present
+    update_cache: yes
+
+- name: Habilitar Docker no Ubuntu
+  when: ansible_os_family == "Debian"
+  service:
+    name: docker
+    state: started
+    enabled: true
+
+- name: Adicionar usuário ao grupo docker no Ubuntu
+  when: ansible_os_family == "Debian"
+  user:
+    name: "{{ ansible_user }}"
+    groups: docker
+    append: yes

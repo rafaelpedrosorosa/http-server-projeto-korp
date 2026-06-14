@@ -1,0 +1,42 @@
+---
+- name: Derrubar stack antiga com Podman Compose no Rocky
+  when: ansible_os_family == "RedHat"
+  command: podman-compose down
+  args:
+    chdir: /opt/projeto-korp
+  ignore_errors: true
+
+- name: Criar diretório da aplicação
+  file:
+    path: /opt/projeto-korp
+    state: directory
+    mode: '0755'
+
+- name: Sincronizar arquivos do projeto com rsync
+  command: >
+    rsync -a --delete --exclude .git --exclude ansible {{ playbook_dir }}/../  /opt/projeto-korp/
+
+- name: Criar rede no Podman
+  when: ansible_os_family == "RedHat"
+  command: podman network create korp-net
+  register: podman_network
+  failed_when:
+    - podman_network.rc != 0
+    - "'already exists' not in podman_network.stderr"
+  changed_when: podman_network.rc == 0
+
+- name: Build da imagem com Podman
+  when: ansible_os_family == "RedHat"
+  command: podman build -t http-server-projeto-korp:latest /opt/projeto-korp/app
+
+- name: Subir stack com Podman Compose no Rocky
+  when: ansible_os_family == "RedHat"
+  command: podman-compose up -d
+  args:
+    chdir: /opt/projeto-korp
+
+- name: Subir stack com Docker Compose no Ubuntu
+  when: ansible_os_family == "Debian"
+  command: docker compose up -d
+  args:
+    chdir: /opt/projeto-korp

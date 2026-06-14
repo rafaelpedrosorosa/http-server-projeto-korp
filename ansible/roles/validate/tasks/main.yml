@@ -1,0 +1,13 @@
+---
+- name: Aguardar serviço responder via NGINX
+  uri:
+    url: http://localhost:8081/projeto-korp
+    method: GET
+  register: resultado
+  retries: 10
+  delay: 5
+  until: resultado.status == 200
+
+- name: Exibir retorno da aplicação
+  debug:
+    var: resultado.json

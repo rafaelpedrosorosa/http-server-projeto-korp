@@ -1,0 +1,6 @@
+---
+- hosts: korp
+  roles:
+    - docker
+    - deploy
+    - validate
