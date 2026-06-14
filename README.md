@@ -66,10 +66,14 @@ A aplicação disponibiliza endpoints para consulta da aplicação, health check
 │   └── main.go
 ├── nginx
 │   └── conf.d
+│       └── http-server-projeto-korp.conf
 ├── prometheus
 │   └── prometheus.yml
 ├── grafana
 ├── ansible
+│   ├── inventory.ini
+│   ├── site.yml
+│   └── roles
 ├── docs
 │   └── evidencias
 ├── docker-compose.yml
@@ -234,12 +238,12 @@ O dashboard disponibiliza:
 * Uso de memória
 * Uso de CPU
 * Heap da aplicação
-* Goroutines
+* Quantidade de goroutines
 * Total de requisições
 * Requisições por segundo
 * Distribuição de requisições por endpoint
 
-O Grafana é provisionado automaticamente através dos arquivos de provisionamento do projeto.
+O Grafana é provisionado automaticamente através dos arquivos de provisionamento do projeto, dispensando importação manual após o deploy.
 
 ---
 
@@ -249,7 +253,7 @@ O ambiente pode ser provisionado automaticamente utilizando Ansible.
 
 O playbook realiza:
 
-* Instalação do Docker/Podman
+* Instalação do Docker ou Podman
 * Criação da rede de containers
 * Build da aplicação
 * Deploy dos containers
@@ -261,7 +265,7 @@ O playbook realiza:
 Execução:
 
 ```bash
-ansible-playbook -i inventory site.yml --ask-become-pass
+ansible-playbook -i inventory.ini site.yml
 ```
 
 ---
@@ -270,31 +274,27 @@ ansible-playbook -i inventory site.yml --ask-become-pass
 
 ### Endpoint /projeto-korp
 
-![Endpoint Projeto Korp](docs/evidencias/app_endpoint_projeto_korp.png)
+![Endpoint Projeto Korp](docs/evidencias/01-endpoint-projeto-korp.png)
 
 ### Endpoint /health
 
-![Health Check](docs/evidencias/app_healthcheck.png)
+![Health Check](docs/evidencias/02-health-check.png)
 
 ### Consulta Prometheus
 
-![Prometheus Query](docs/evidencias/prometheus_query_up.png)
+![Prometheus Query](docs/evidencias/03-prometheus-query.png)
 
 ### Targets Prometheus
 
-![Prometheus Targets](docs/evidencias/prometheus_targets_up.png)
+![Prometheus Targets](docs/evidencias/04-prometheus-targets.png)
 
 ### Dashboard Grafana
 
-![Grafana Dashboard](docs/evidencias/grafana_dashboard.png)
+![Grafana Dashboard](docs/evidencias/05-grafana-dashboard.png)
 
-### Execução do Playbook Ansible
+### Execução e Validação via Ansible
 
-![Ansible Playbook](docs/evidencias/ansible_playbook_execucao.png)
-
-### Validação da Aplicação via Ansible
-
-![Ansible Validation](docs/evidencias/ansible_validacao_aplicacao.png)
+![Ansible Provisioning and Validation](docs/evidencias/06-ansible-provisioning-and-validation.png)
 
 ---
 
