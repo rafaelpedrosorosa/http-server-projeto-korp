@@ -8,6 +8,13 @@
     state: present
     update_cache: yes
 
+- name: Instalar EPEL
+  dnf:
+    name: epel-release
+    state: present
+  become: true
+  when: ansible_os_family == "RedHat"
+
 - name: Instalar Podman no Rocky
   become: true
   when: ansible_os_family == "RedHat"
