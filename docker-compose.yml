@@ -39,6 +39,10 @@ services:
     container_name: grafana-korp
     ports:
       - "3000:3000"
+    volumes:
+    - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources:ro,z
+    - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards:ro,z
+    - ./grafana/dashboards:/var/lib/grafana/dashboards:ro,z
     depends_on:
       - prometheus
     networks:
