@@ -11,10 +11,12 @@
     path: /opt/projeto-korp
     state: directory
     mode: '0755'
+    become: true
 
 - name: Sincronizar arquivos do projeto com rsync
   command: >
     rsync -a --delete --exclude .git --exclude ansible {{ playbook_dir }}/../  /opt/projeto-korp/
+  become: true
 
 - name: Criar rede no Podman
   when: ansible_os_family == "RedHat"
