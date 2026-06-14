@@ -96,6 +96,3 @@ O dashboard Grafana apresenta:
 * Distribuição de requisições por endpoint
 
 O dashboard exportado encontra-se no repositório através do arquivo JSON disponibilizado para importação.
-<<<<<<< HEAD
-=======
->>>>>>> 655cb6e (Atualiza README e adiciona dashboard Grafana)
