@@ -317,5 +317,3 @@ Rafael Rosa
 
 Analista de Infraestrutura | Linux | Containers | Automação | Observabilidade
 
-Projeto desenvolvido para o processo seletivo da Korp.
-
