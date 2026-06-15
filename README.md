@@ -68,6 +68,13 @@ Observação:
 
 ```text
 .
+├── ansible
+│   ├── inventory.ini
+│   ├── site.yml
+│   └── roles
+│       ├── docker
+│       ├── deploy
+│       └── validate
 ├── app
 │   ├── Dockerfile
 │   ├── go.mod
@@ -79,10 +86,13 @@ Observação:
 ├── prometheus
 │   └── prometheus.yml
 ├── grafana
-├── ansible
-│   ├── inventory.ini
-│   ├── site.yml
-│   └── roles
+│   ├── dashboards
+│   │   └── http-server-projeto-korp-dashboard.json
+│   └── provisioning
+│       ├── dashboards
+│       │   └── dashboards.yml
+│       └── datasources
+│           └── datasources.yml
 ├── docs
 │   └── evidencias
 ├── docker-compose.yml
