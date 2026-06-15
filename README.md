@@ -48,10 +48,19 @@ A aplicação disponibiliza endpoints para consulta da aplicação, health check
 
 ## Requisitos
 
-* Go 1.23+
-* Docker ou Podman
-* Docker Compose ou Podman Compose
-* Ansible
+### Rocky Linux 9
+
+Instalar os pré-requisitos:
+
+```bash
+sudo dnf install -y git ansible-core
+```
+
+Observação:
+
+* Docker/Podman são instalados automaticamente pelo playbook.
+* Prometheus, Grafana e Nginx são provisionados automaticamente.
+* O playbook foi validado em ambiente Rocky Linux 9 limpo.
 
 ---
 
@@ -142,13 +151,13 @@ Aplicação Go (8080)
 ### Docker
 
 ```bash
-docker compose up -d
+docker compose up -d --build
 ```
 
 ### Podman
 
 ```bash
-podman-compose up -d
+podman-compose up -d --build
 ```
 
 Serviços disponíveis:
@@ -253,20 +262,41 @@ O ambiente pode ser provisionado automaticamente utilizando Ansible.
 
 O playbook realiza:
 
-* Instalação do Docker ou Podman
-* Criação da rede de containers
-* Build da aplicação
+* Instalação do Podman (Rocky Linux)
+* Instalação do Podman Compose
+* Instalação do EPEL quando necessário
+* Criação dos diretórios da aplicação
+* Build da aplicação Golang
 * Deploy dos containers
 * Configuração do Nginx
 * Configuração do Prometheus
-* Provisionamento do Grafana
+* Provisionamento automático do Grafana
 * Validação da aplicação através de requisição HTTP
 
-Execução:
+### Execução
 
 ```bash
-ansible-playbook -i inventory.ini site.yml
+cd ansible
+ansible-playbook -i inventory.ini site.yml --ask-become-pass
 ```
+
+O playbook foi validado em uma instalação limpa do Rocky Linux 9 e realiza todo o provisionamento automaticamente.
+
+### Validação após execução
+
+```bash
+curl http://localhost:8081/projeto-korp
+curl http://localhost:8081/health
+curl -s http://localhost:9091/-/ready
+curl -I http://localhost:3000
+```
+
+Resultados esperados:
+
+* Aplicação respondendo via Nginx
+* Endpoint de saúde retornando status OK
+* Prometheus retornando estado READY
+* Grafana acessível na porta 3000
 
 ---
 
@@ -300,8 +330,6 @@ ansible-playbook -i inventory.ini site.yml
 
 ## Validação do Ambiente
 
-Após a execução do Docker Compose ou do Playbook Ansible:
-
 | Serviço      | URL                                |
 | ------------ | ---------------------------------- |
 | Aplicação    | http://localhost:8081/projeto-korp |
@@ -313,7 +341,7 @@ Após a execução do Docker Compose ou do Playbook Ansible:
 
 ## Autor
 
-Rafael Rosa
+**Rafael Rosa**
 
 Analista de Infraestrutura | Linux | Containers | Automação | Observabilidade
 
