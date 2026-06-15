@@ -11,7 +11,7 @@
     path: /opt/projeto-korp
     state: directory
     mode: '0755'
-    become: true
+  become: true
 
 - name: Sincronizar arquivos do projeto com rsync
   command: >
